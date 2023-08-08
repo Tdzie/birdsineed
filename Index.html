@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birds I Need</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px; /* You can adjust this as needed */
+            background-color: #ccc; /* Gray background to show the div before the map loads */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Birds I Need
+</header>
+
+<div id="map"></div>
+
+<!-- Include Google Maps JavaScript API (if needed) -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> -->
+<div id="spreadsheetData"></div>
+
+</body>
+  <script>
+    // Replace this with your spreadsheet's URL in the JSON format
+    const SPREADSHEET_URL = 'https://spreadsheets.google.com/feeds/list/YOUR_SPREADSHEET_ID/od6/public/values?alt=json';
+
+    // Function to fetch spreadsheet data
+    function fetchSpreadsheetData() {
+        fetch(SPREADSHEET_URL)
+            .then(response => response.json())
+            .then(data => {
+                // For demonstration purposes, just stringify the data and display it.
+                // In a real application, you'd want to process and display this data more thoughtfully.
+                document.getElementById('spreadsheetData').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error fetching spreadsheet data:', error);
+                document.getElementById('spreadsheetData').innerText = 'Error fetching data. See console for details.';
+            });
+    }
+
+    // Fetch data when the page loads
+    window.addEventListener('load', fetchSpreadsheetData);
+</script>
+
+</html>
