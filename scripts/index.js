@@ -98,6 +98,7 @@ newBirdsForDisplay.forEach(bird => {
     birdDiv.style.margin = '10px 0'; // Add some spacing between each div
     birdDiv.style.padding = '10px'; // Add some padding for aesthetics
     birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
+    birdDiv.style.width = '90%';
 
     
     // Populate the div with the bird data
