@@ -120,5 +120,12 @@ function initMap() {
     });
 }
 
+google.maps.event.addListener(map, 'center_changed', function() {
+    var newCenter = map.getCenter();
+    document.getElementById('dataDisplay').innerText = "";
+    latForApi = parseFloat(newCenter.lat().toFixed(2));
+    lngForApi = parseFloat(newCenter.lng().toFixed(2));
+    fetchEBirdData();
+});
 
 
