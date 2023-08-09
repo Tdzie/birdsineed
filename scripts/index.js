@@ -4,6 +4,7 @@ let database = [];
 let map;
 
 let infoWindow;
+let centerChangeTimeout;
 
 // Function to fetch spreadsheet data
 function fetchSpreadsheetData() {
@@ -59,6 +60,7 @@ function fetchEBirdData() {
         .then(response => response.json())
         .then(eBirdData => {
             let newBirdsForProcessing = [];
+            let newBirdsForDisplay = [];
 
             eBirdData.forEach(bird => {
                 let found = false;
@@ -72,12 +74,20 @@ function fetchEBirdData() {
                 }
                 if (!found) {
                     newBirdsForProcessing.push(bird);
+                    const simplifiedBird = {
+                        Name: bird.comName,
+                        Location: bird.locName,
+                        Count: bird.howMany,
+                        Date: bird.obsDt
+                    };
+
+                    newBirdsForDisplay.push(simplifiedBird);
                 }
             });
 
             console.log(newBirdsForProcessing);
-            //document.getElementById('spreadsheetData').innerText = JSON.stringify(eBirdData, null, 2);
-            document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForProcessing, null, 2);
+            
+            document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForDisplay, null, 2);
 
 
             newBirdsForProcessing.forEach(bird => {
@@ -92,14 +102,14 @@ function fetchEBirdData() {
                     infoWindow.open(map, marker);
                 });
 
-});
+    });
 
         })
         .catch(error => {
             console.log('error', error);
             document.getElementById('dataDisplay').innerText = 'Error fetching eBird data. See console for details.';
         });
-}
+    }
 
 // Fetch spreadsheet data when the page loads
 window.addEventListener('load', fetchSpreadsheetData);
@@ -119,11 +129,20 @@ function initMap() {
         map: map
     });
     google.maps.event.addListener(map, 'center_changed', function () {
-        var newCenter = map.getCenter();
-        document.getElementById('dataDisplay').innerText = "";
-        latForApi = parseFloat(newCenter.lat().toFixed(2));
-        lngForApi = parseFloat(newCenter.lng().toFixed(2));
-        fetchEBirdData();
+
+        if (centerChangeTimeout) {
+            clearTimeout(centerChangeTimeout);
+        }
+        centerChangeTimeout = setTimeout(() => {
+
+            var newCenter = map.getCenter();
+            document.getElementById('dataDisplay').innerText = "";
+            latForApi = parseFloat(newCenter.lat().toFixed(2));
+            lngForApi = parseFloat(newCenter.lng().toFixed(2));
+            fetchEBirdData();
+
+        }, 500);
+
     });
 
 

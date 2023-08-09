@@ -21,3 +21,8 @@ header {
     background-color: #ccc;
     /* Gray background to show the div before the map loads */
 }
+
+#dataDisplay{
+    overflow: auto;
+    height: 300px;
+}
