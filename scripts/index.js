@@ -2,6 +2,9 @@ const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbxdvaBuBfRlwScE
 
 let database = [];
 let map;
+
+let infoWindow;
+
 // Function to fetch spreadsheet data
 function fetchSpreadsheetData() {
     fetch(SPREADSHEET_URL)
@@ -65,7 +68,13 @@ function fetchEBirdData() {
                 position: { lat: bird.lat, lng: bird.lng },
                 map: map,
                 title: bird.comName
-    });
+            });
+
+                marker.addListener('click', function () {
+                    infoWindow.setContent(`<div><strong>${bird.comName}</strong><br>${bird.sciName}</div>`);
+                    infoWindow.open(map, marker);
+                });
+
 });
 
         })
@@ -86,7 +95,8 @@ function initMap() {
         center: location
     });
 
-
+    infoWindow = new google.maps.InfoWindow();
+    
     var marker = new google.maps.Marker({
         position: location,
         map: map
