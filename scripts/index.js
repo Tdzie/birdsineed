@@ -20,10 +20,27 @@ function fetchSpreadsheetData() {
 }
 
 const eBirdApiToken = '377m29pfd648';
-    const lat = 36.07;
-    const lng = -115.09;
+    var lat = 0;
+    var lng = 0;
+    
 
-
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+            console.log("Latitude:", lat);
+            console.log("Longitude:", lng);
+    
+            // Update your map's center to the user's location
+            map.setCenter({ lat: lat, lng: lng });
+        }, function(error) {
+            console.error("Error obtaining geolocation:", error.message);
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+    var latForApi = parseFloat(lat.toFixed(2));
+    var lngForApi = parseFloat(lng.toFixed(2));
 
 
 
@@ -38,7 +55,7 @@ function fetchEBirdData() {
     };
 
 
-    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}&back=1&dist=50&includeProvisional=true&sort=species`, requestOptions)
+    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=1&dist=50&includeProvisional=true&sort=species`, requestOptions)
         .then(response => response.json())
         .then(eBirdData => {
             let newBirdsForProcessing = [];
@@ -91,7 +108,7 @@ window.addEventListener('load', fetchSpreadsheetData);
 function initMap() {
     var location = { lat: lat, lng: lng }; // Replace with your coordinates
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
+        zoom: 10,
         center: location
     });
 
