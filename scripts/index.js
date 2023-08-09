@@ -1,7 +1,7 @@
 const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbxdvaBuBfRlwScEL1YLe_EUB8YzEMmkz_aaky7S6DPbT3Y_5-hI_KSL2OWcerfhAIEx/exec';
 
 let database = [];
-
+let map;
 // Function to fetch spreadsheet data
 function fetchSpreadsheetData() {
     fetch(SPREADSHEET_URL)
@@ -17,6 +17,12 @@ function fetchSpreadsheetData() {
 }
 
 const eBirdApiToken = '377m29pfd648';
+    const lat = 36.07;
+    const lng = -115.09;
+
+
+
+
 
 function fetchEBirdData() {
     const myHeaders = new Headers();
@@ -28,8 +34,6 @@ function fetchEBirdData() {
         redirect: 'follow'
     };
 
-    const lat = `36.07`;
-    const lng = `-115.09`;
 
     fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}&back=1&dist=50&includeProvisional=true&sort=species`, requestOptions)
         .then(response => response.json())
@@ -54,6 +58,16 @@ function fetchEBirdData() {
             console.log(newBirdsForProcessing);
             //document.getElementById('spreadsheetData').innerText = JSON.stringify(eBirdData, null, 2);
             document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForProcessing, null, 2);
+
+
+            newBirdsForProcessing.forEach(bird => {
+                const marker = new google.maps.Marker({
+                position: { lat: bird.lat, lng: bird.lng },
+                map: map,
+                title: bird.comName
+    });
+});
+
         })
         .catch(error => {
             console.log('error', error);
@@ -63,3 +77,21 @@ function fetchEBirdData() {
 
 // Fetch spreadsheet data when the page loads
 window.addEventListener('load', fetchSpreadsheetData);
+
+
+function initMap() {
+    var location = { lat: lat, lng: lng }; // Replace with your coordinates
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: location
+    });
+
+
+    var marker = new google.maps.Marker({
+        position: location,
+        map: map
+    });
+}
+
+
+
