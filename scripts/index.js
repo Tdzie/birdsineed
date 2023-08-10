@@ -71,9 +71,14 @@ function fetchEBirdData() {
                     birdDiv.style.alignItems = 'stretch';
                     birdDiv.style.justifyContent = 'space-between';
 
+                    let envminX = bird.lng - 0.5;
+                    let envmaxX = bird.lng + 0.5;
+                    let envminY = bird.lat - 0.5;
+                    let envmaxY = bird.lat + 0.5;
+
                     let mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
                     let linkToEbird = `https://ebird.org/checklist/${bird.subId}`;
-                    let customLink = `https://ebird.org/map/${bird.speciesCode}?neg=true&env.minX=-74.98802135915298&env.minY=38.708708906699236&env.maxX=-65.53977917165298&env.maxY=46.38260226458398&zh=true&gp=true&ev=Z&excludeExX=false&excludeExAll=false&mr=1-12&bmo=1&emo=12&yr=cur&byr=2023&eyr=2023#more-map-options`;
+                    let customLink = `https://ebird.org/map/${bird.speciesCode}?neg=true&env.minX=${envminX}&env.minY=${envminY}&env.maxX=${envmaxX}&env.maxY=${envmaxY}&zh=true&gp=true&ev=Z&excludeExX=false&excludeExAll=false&mr=1-12&bmo=1&emo=12&yr=cur&byr=2023&eyr=2023#more-map-options`;
 
                     // Populate the div with the bird data
                     birdDiv.innerHTML = `
