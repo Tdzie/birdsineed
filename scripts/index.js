@@ -11,7 +11,6 @@ var activeUser = 'Cappa';
 let markers = [];
 
 
-
 // Fetch spreadsheet data when the page loads
 window.addEventListener('load', fetchEBirdData());
 
@@ -63,22 +62,32 @@ function fetchEBirdData() {
 
                 if (!found) {
                     const birdDiv = document.createElement('div');
-                    birdDiv.style.border = '1px solid black'; // Add a border for visual separation
-                    birdDiv.style.borderRadius = '8px'; // Rounded corners
-                    birdDiv.style.margin = '10px 0'; // Add some spacing between each div
-                    birdDiv.style.padding = '10px'; // Add some padding for aesthetics
-                    birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
+                    birdDiv.style.border = '1px solid black';
+                    birdDiv.style.borderRadius = '8px';
+                    birdDiv.style.margin = '10px 0';
+                    birdDiv.style.padding = '10px';
+                    birdDiv.style.backgroundColor = '#B0E57C';
+                    birdDiv.style.display = 'flex';
+                    birdDiv.style.alignItems = 'stretch';  // This will make the children (divs) stretch to full height
+                    birdDiv.style.justifyContent = 'space-between';
 
                     let mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
+                    let linkToEbird = `https://ebird.org/checklist/${bird.subId}`;
 
                     // Populate the div with the bird data
                     birdDiv.innerHTML = `
-                        <a href="${mapsLink}" target="_blank" style="text-decoration: none; color: inherit;">
-                            <strong>Name:</strong> ${bird.comName}<br>
-                            <strong>Location:</strong> ${bird.locName}<br>
-                            <strong>Count:</strong> ${bird.howMany}<br>
-                            <strong>Date:</strong> ${bird.obsDt}
-                        </a>
+                        <div style="flex: 1; display: flex; align-items: center;">
+                            <div>
+                                <strong>Name:</strong> ${bird.comName}<br>
+                                <strong>Location:</strong> ${bird.locName}<br>
+                                <strong>Count:</strong> ${bird.howMany}<br>
+                                <strong>Date:</strong> ${bird.obsDt}
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: stretch; gap: 5px;">
+                            <button style="flex: 1;" onclick="window.open('${mapsLink}', '_blank')">Directions</button>
+                            <button style="flex: 1;" onclick="window.open('${linkToEbird}', '_blank')">View on eBird</button>
+                        </div>
                     `;
 
                     // Append the bird div to the dataDisplay element
