@@ -71,10 +71,10 @@ function fetchEBirdData() {
                     birdDiv.style.alignItems = 'stretch';
                     birdDiv.style.justifyContent = 'space-between';
 
-                    let envminX = bird.lng - 0.5;
-                    let envmaxX = bird.lng + 0.5;
-                    let envminY = bird.lat - 0.5;
-                    let envmaxY = bird.lat + 0.5;
+                    let envminX = bird.lng - 0.2;
+                    let envmaxX = bird.lng + 0.2;
+                    let envminY = bird.lat - 0.2;
+                    let envmaxY = bird.lat + 0.2;
 
                     let mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
                     let linkToEbird = `https://ebird.org/checklist/${bird.subId}`;
