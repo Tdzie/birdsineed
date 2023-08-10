@@ -3,10 +3,8 @@
 
 body {
     font-family: Arial, sans-serif;
-    display: grid;
-    place-items: center;     /* shorthand for align-items and justify-items */
-    height: 100vh;           /* sets the body height to full viewport height */
-    margin: 0;          
+       /* sets the body height to full viewport height */
+    margin: 5px;          
 }
 
 header {
