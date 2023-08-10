@@ -142,7 +142,7 @@ window.addEventListener('load', fetchSpreadsheetData);
 function initMap() {
     var location = { lat: lat, lng: lng }; // Replace with your coordinates
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 5,
+        zoom: 9,
         center: location
     });
 
