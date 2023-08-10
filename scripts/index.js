@@ -1,29 +1,13 @@
-const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbxdvaBuBfRlwScEL1YLe_EUB8YzEMmkz_aaky7S6DPbT3Y_5-hI_KSL2OWcerfhAIEx/exec';
 
-let database = [];
 let map;
-
 let infoWindow;
 let centerChangeTimeout;
-
-// Function to fetch spreadsheet data
-function fetchSpreadsheetData() {
-    fetch(SPREADSHEET_URL)
-        .then(response => response.json())
-        .then(data => {
-            database = data;  // Store the fetched database data for further processing
-            fetchEBirdData();  // Fetch eBird data after we have the database data
-           // console.log('Spreadsheet data:', data);
-        })
-        .catch(error => {
-            console.error('Error fetching spreadsheet data:', error);
-        });
-}
-
 const eBirdApiToken = '377m29pfd648';
-    var lat = 0;
-    var lng = 0;
-    
+var lat = 0;
+var lng = 0;
+var latForApi = parseFloat(lat.toFixed(2));
+var lngForApi = parseFloat(lng.toFixed(2));
+   
 
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -40,9 +24,7 @@ const eBirdApiToken = '377m29pfd648';
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
-    var latForApi = parseFloat(lat.toFixed(2));
-    var lngForApi = parseFloat(lng.toFixed(2));
-
+    
 
 
 function fetchEBirdData() {
