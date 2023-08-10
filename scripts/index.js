@@ -21,8 +21,8 @@ function fetchSpreadsheetData() {
 }
 
 const eBirdApiToken = '377m29pfd648';
-    var lat = 0;
-    var lng = 0;
+    var lat = 42.0501;
+    var lng = -78.8801;
     
 
     if ("geolocation" in navigator) {
@@ -142,7 +142,7 @@ window.addEventListener('load', fetchSpreadsheetData);
 function initMap() {
     var location = { lat: lat, lng: lng }; // Replace with your coordinates
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
+        zoom: 5,
         center: location
     });
 
