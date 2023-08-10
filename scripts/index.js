@@ -69,12 +69,16 @@ function fetchEBirdData() {
                     birdDiv.style.padding = '10px'; // Add some padding for aesthetics
                     birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
 
+                    let mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
+
                     // Populate the div with the bird data
                     birdDiv.innerHTML = `
-                        <strong>Name:</strong> ${bird.comName}<br>
-                        <strong>Location:</strong> ${bird.locName}<br>
-                        <strong>Count:</strong> ${bird.howMany}<br>
-                        <strong>Date:</strong> ${bird.obsDt}
+                        <a href="${mapsLink}" target="_blank" style="text-decoration: none; color: inherit;">
+                            <strong>Name:</strong> ${bird.comName}<br>
+                            <strong>Location:</strong> ${bird.locName}<br>
+                            <strong>Count:</strong> ${bird.howMany}<br>
+                            <strong>Date:</strong> ${bird.obsDt}
+                        </a>
                     `;
 
                     // Append the bird div to the dataDisplay element
@@ -141,6 +145,7 @@ function initMap() {
 document.getElementById('userSelection').addEventListener('change', function (event) {
     if (event.target.name === 'user') {
         activeUser = event.target.value;
+        document.getElementById('dataDisplay').innerText = "";
         clearMarkers();
         fetchEBirdData();
         console.log(`Active user set to: ${activeUser}`);
