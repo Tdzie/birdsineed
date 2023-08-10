@@ -26,3 +26,10 @@ header {
     overflow: auto;
     height: 300px;
 }
+
+#userSelection input[type="radio"],
+#userSelection label {
+    display: inline-block;
+    margin-right: 20px;
+    /* spacing between each radio button set */
+}

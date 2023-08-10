@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <script src="scripts/birds.js"></script>
     <script src="scripts/index.js" defer></script>
     <link rel="stylesheet" href="styles/index.css">
     
@@ -12,7 +12,17 @@
 <body>
 
 <header>
-    Birds I Need
+<div id="userSelection">
+    <input type="radio" id="Cappa" name="user" value="Cappa" checked>
+    <label for="Cappa">Cappa</label>
+
+    <input type="radio" id="Maggie" name="user" value="Maggie">
+    <label for="Maggie">Maggie</label>
+
+    <input type="radio" id="Timothy" name="user" value="Timothy">
+    <label for="Timothy">Timothy</label>
+</div>
+
 </header>
 
 <div id="map" style="height: 500px; width: 100%;"></div>

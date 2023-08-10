@@ -7,8 +7,15 @@ var lat = 42.0501;
 var lng = -78.8801;
 var latForApi = parseFloat(lat.toFixed(2));
 var lngForApi = parseFloat(lng.toFixed(2));
-   
+var activeUser = 'Cappa';
+let markers = [];
 
+
+
+// Fetch spreadsheet data when the page loads
+window.addEventListener('load', fetchEBirdData());
+
+// Fetch eBird data when the page loads
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
             lat = position.coords.latitude;
@@ -41,75 +48,52 @@ function fetchEBirdData() {
     fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=1&dist=50&includeProvisional=true&sort=species`, requestOptions)
         .then(response => response.json())
         .then(eBirdData => {
-            let newBirdsForProcessing = [];
-            let newBirdsForDisplay = [];
+            let activeUserBirds = birdsNeeded[activeUser];
+            console.log(eBirdData);
 
             eBirdData.forEach(bird => {
                 let found = false;
-                for (let dbEntry of database) {
-                    if (bird.sciName === dbEntry[3]) {
-                        
-                        if (dbEntry[0] === "X" || dbEntry[0] === "x") {
-                          found = true;  
-                        }
-                    }
+                // Convert both bird names to lowercase and trim any whitespace for accurate comparison
+                let birdSciNameTrimmedLowered = bird.sciName.trim().toLowerCase();
+                let activeUserBirdsTrimmedLowered = activeUserBirds.map(name => name.trim().toLowerCase());
+
+                if (activeUserBirdsTrimmedLowered.includes(birdSciNameTrimmedLowered)) {
+                    found = true;
                 }
+
                 if (!found) {
-                    newBirdsForProcessing.push(bird);
-                    const simplifiedBird = {
-                        Name: bird.comName,
-                        Location: bird.locName,
-                        Count: bird.howMany,
-                        Date: bird.obsDt
-                    };
+                    const birdDiv = document.createElement('div');
+                    birdDiv.style.border = '1px solid black'; // Add a border for visual separation
+                    birdDiv.style.borderRadius = '8px'; // Rounded corners
+                    birdDiv.style.margin = '10px 0'; // Add some spacing between each div
+                    birdDiv.style.padding = '10px'; // Add some padding for aesthetics
+                    birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
 
-                    newBirdsForDisplay.push(simplifiedBird);
+                    // Populate the div with the bird data
+                    birdDiv.innerHTML = `
+                        <strong>Name:</strong> ${bird.comName}<br>
+                        <strong>Location:</strong> ${bird.locName}<br>
+                        <strong>Count:</strong> ${bird.howMany}<br>
+                        <strong>Date:</strong> ${bird.obsDt}
+                    `;
+
+                    // Append the bird div to the dataDisplay element
+                    document.getElementById('dataDisplay').appendChild(birdDiv);
+
+                    const marker = new google.maps.Marker({
+                        position: { lat: bird.lat, lng: bird.lng },
+                        map: map,
+                        title: bird.comName
+                    });
+                    markers.push(marker);
+
+                    marker.addListener('click', function () {
+                        infoWindow.setContent(`<div><strong>${bird.comName}</strong><br>${bird.sciName}</div>`);
+                        infoWindow.open(map, marker);
+                    });
+                    
                 }
             });
-
-            console.log(newBirdsForProcessing);
-            
-            //document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForDisplay, null, 2);
-            // ... Your existing code ...
-
-newBirdsForDisplay.forEach(bird => {
-    // Create a div for each bird
-    const birdDiv = document.createElement('div');
-    birdDiv.style.border = '1px solid black'; // Add a border for visual separation
-    birdDiv.style.borderRadius = '8px'; // Rounded corners
-    birdDiv.style.margin = '10px 0'; // Add some spacing between each div
-    birdDiv.style.padding = '10px'; // Add some padding for aesthetics
-    birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
-   
-
-    
-    // Populate the div with the bird data
-    birdDiv.innerHTML = `
-        <strong>Name:</strong> ${bird.Name}<br>
-        <strong>Location:</strong> ${bird.Location}<br>
-        <strong>Count:</strong> ${bird.Count}<br>
-        <strong>Date:</strong> ${bird.Date}
-    `;
-
-    // Append the bird div to the dataDisplay element
-    document.getElementById('dataDisplay').appendChild(birdDiv);
-});
-
-
-            newBirdsForProcessing.forEach(bird => {
-                const marker = new google.maps.Marker({
-                position: { lat: bird.lat, lng: bird.lng },
-                map: map,
-                title: bird.comName
-            });
-
-                marker.addListener('click', function () {
-                    infoWindow.setContent(`<div><strong>${bird.comName}</strong><br>${bird.sciName}</div>`);
-                    infoWindow.open(map, marker);
-                });
-
-    });
-
         })
         .catch(error => {
             console.log('error', error);
@@ -117,8 +101,7 @@ newBirdsForDisplay.forEach(bird => {
         });
     }
 
-// Fetch spreadsheet data when the page loads
-window.addEventListener('load', fetchSpreadsheetData);
+
 
 
 function initMap() {
@@ -153,6 +136,25 @@ function initMap() {
 
 
 }
+
+
+document.getElementById('userSelection').addEventListener('change', function (event) {
+    if (event.target.name === 'user') {
+        activeUser = event.target.value;
+        clearMarkers();
+        fetchEBirdData();
+        console.log(`Active user set to: ${activeUser}`);
+    }
+});
+
+
+function clearMarkers() {
+    for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
+}
+
 
 
 
