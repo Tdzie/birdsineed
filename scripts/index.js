@@ -3,8 +3,8 @@ let map;
 let infoWindow;
 let centerChangeTimeout;
 const eBirdApiToken = '377m29pfd648';
-var lat = 0;
-var lng = 0;
+var lat = 42.0501;
+var lng = -78.8801;
 var latForApi = parseFloat(lat.toFixed(2));
 var lngForApi = parseFloat(lng.toFixed(2));
    
@@ -69,7 +69,31 @@ function fetchEBirdData() {
 
             console.log(newBirdsForProcessing);
             
-            document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForDisplay, null, 2);
+            //document.getElementById('dataDisplay').innerText = JSON.stringify(newBirdsForDisplay, null, 2);
+            // ... Your existing code ...
+
+newBirdsForDisplay.forEach(bird => {
+    // Create a div for each bird
+    const birdDiv = document.createElement('div');
+    birdDiv.style.border = '1px solid black'; // Add a border for visual separation
+    birdDiv.style.borderRadius = '8px'; // Rounded corners
+    birdDiv.style.margin = '10px 0'; // Add some spacing between each div
+    birdDiv.style.padding = '10px'; // Add some padding for aesthetics
+    birdDiv.style.backgroundColor = '#B0E57C';  // Semi-light green
+   
+
+    
+    // Populate the div with the bird data
+    birdDiv.innerHTML = `
+        <strong>Name:</strong> ${bird.Name}<br>
+        <strong>Location:</strong> ${bird.Location}<br>
+        <strong>Count:</strong> ${bird.Count}<br>
+        <strong>Date:</strong> ${bird.Date}
+    `;
+
+    // Append the bird div to the dataDisplay element
+    document.getElementById('dataDisplay').appendChild(birdDiv);
+});
 
 
             newBirdsForProcessing.forEach(bird => {
@@ -100,7 +124,7 @@ window.addEventListener('load', fetchSpreadsheetData);
 function initMap() {
     var location = { lat: lat, lng: lng }; // Replace with your coordinates
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
+        zoom: 9,
         center: location
     });
 
