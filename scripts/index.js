@@ -9,8 +9,8 @@ var latForApi = parseFloat(lat.toFixed(2));
 var lngForApi = parseFloat(lng.toFixed(2));
 var activeUser = 'Cappa';
 let markers = [];
-
-
+var mapsLink;
+var color;
 // Fetch spreadsheet data when the page loads
 window.addEventListener('load', fetchEBirdData());
 
@@ -44,7 +44,7 @@ function fetchEBirdData() {
     };
 
 
-    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=1&dist=50&includeProvisional=true&sort=species`, requestOptions)
+    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=7&dist=50&includeProvisional=true&sort=species`, requestOptions)
         .then(response => response.json())
         .then(eBirdData => {
             let activeUserBirds = birdsNeeded[activeUser];
@@ -60,13 +60,13 @@ function fetchEBirdData() {
                     found = true;
                 }
 
-                if (!found) {
+                if (!found) {                    
                     const birdDiv = document.createElement('div');
-                    birdDiv.style.border = '1px solid black';
+                    birdDiv.style.border = `1px solid black`;
                     birdDiv.style.borderRadius = '8px';
                     birdDiv.style.margin = '10px 0';
                     birdDiv.style.padding = '10px';
-                    birdDiv.style.backgroundColor = '#B0E57C';
+                    birdDiv.style.backgroundColor = `${determineColorForDiv(bird.obsDt)}`;
                     birdDiv.style.display = 'flex';
                     birdDiv.style.alignItems = 'stretch';
                     birdDiv.style.justifyContent = 'space-between';
@@ -76,10 +76,15 @@ function fetchEBirdData() {
                     let envminY = bird.lat - 0.2;
                     let envmaxY = bird.lat + 0.2;
 
-                    let mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
+                    if(activeUser == 'Cappa' || activeUser == 'Timothy'){
+                        mapsLink = `http://maps.apple.com/?daddr=${bird.lat},${bird.lng}&dirflg=d`;
+                    } else {
+                        mapsLink = `https://www.google.com/maps/dir/current+location/${bird.lat},${bird.lng}?dir_action=navigate`;
+                    }
+
                     let linkToEbird = `https://ebird.org/checklist/${bird.subId}`;
                     let customLink = `https://ebird.org/map/${bird.speciesCode}?neg=true&env.minX=${envminX}&env.minY=${envminY}&env.maxX=${envmaxX}&env.maxY=${envmaxY}&zh=true&gp=true&ev=Z&excludeExX=false&excludeExAll=false&mr=1-12&bmo=1&emo=12&yr=cur&byr=2023&eyr=2023#more-map-options`;
-
+                    color = determineColor(bird.obsDt);
                     // Populate the div with the bird data
                     birdDiv.innerHTML = `
                         <div style="flex: 1; display: flex; align-items: center;">
@@ -96,13 +101,21 @@ function fetchEBirdData() {
                             <button style="flex: 1;" onclick="window.open('${customLink}', '_blank')">View all Ebird</button>
                         </div>
                     `;
+
+
+
+                    let markerUrl = 'http://maps.google.com/mapfiles/ms/icons/' + color + '-dot.png';
+
                     // Append the bird div to the dataDisplay element
                     document.getElementById('dataDisplay').appendChild(birdDiv);
 
                     const marker = new google.maps.Marker({
                         position: { lat: bird.lat, lng: bird.lng },
                         map: map,
-                        title: bird.comName
+                        title: bird.comName,
+                        icon: {
+                            url: markerUrl
+                        }
                     });
                     markers.push(marker);
 
@@ -176,7 +189,42 @@ function clearMarkers() {
 }
 
 
+function determineColor(dateString) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Reset hours, minutes, seconds, and milliseconds
+
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);  // Reset hours, minutes, seconds, and milliseconds
+
+    const diffTime = today - inputDate;
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);  // Convert time difference to days
+
+    if (diffDays <= 1) {
+        return 'red';
+    } else if (diffDays <= 3) {
+        return 'yellow';
+    } else {
+        return 'blue';
+    }
+}
 
 
+function determineColorForDiv(dateString) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Reset hours, minutes, seconds, and milliseconds
 
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);  // Reset hours, minutes, seconds, and milliseconds
+
+    const diffTime = today - inputDate;
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);  // Convert time difference to days
+
+    if (diffDays <= 1) {
+        return '#d4622b';
+    } else if (diffDays <= 3) {
+        return '#d2f859';
+    } else {
+        return '#1fabe0';
+    }
+}
 
