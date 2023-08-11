@@ -25,7 +25,7 @@ header {
 
 #dataDisplay{
     overflow: auto;
-    height: 300px;
+    height: 250px;
 }
 
 #userSelection input[type="radio"],
