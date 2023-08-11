@@ -1,6 +1,7 @@
 const birdsNeeded = {
     "Cappa": [
         /* ... Cappa's bird names ... */
+        "Ammospiza caudacuta",
         "Dendrocygna autumnalis",
         "Dendrocygna bicolor",
         "Anser caerulescens",
@@ -298,6 +299,7 @@ const birdsNeeded = {
     ],
     "Maggie": [
             /* ... Maggie's bird names ... */
+        "Ammospiza caudacuta",
         "Recurvirostra americana",
         "Botaurus lentiginosus",
         "Anas rubripes",
@@ -587,6 +589,7 @@ const birdsNeeded = {
         ],
     "Timothy": [
                 /* ... Timothy's bird names ... */
+        "Ammospiza caudacuta",
         "Dendrocygna autumnalis",
         "Dendrocygna bicolor",
         "Anser caerulescens",
