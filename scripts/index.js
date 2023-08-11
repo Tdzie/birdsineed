@@ -103,7 +103,7 @@ function fetchEBirdData() {
 
 
                     let color = determineColor(bird.obsDt);
-                    let markerUrl = 'http://maps.google.com/mapfiles/ms/icons/' + color + '-dot.png';
+                    let markerUrl = 'https://maps.google.com/mapfiles/ms/icons/' + color + '-dot.png';
 
                     // Append the bird div to the dataDisplay element
                     document.getElementById('dataDisplay').appendChild(birdDiv);
