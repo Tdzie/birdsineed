@@ -10,7 +10,6 @@ var lngForApi = parseFloat(lng.toFixed(2));
 var activeUser = 'Cappa';
 let markers = [];
 var mapsLink;
-var color;
 // Fetch spreadsheet data when the page loads
 window.addEventListener('load', fetchEBirdData());
 
@@ -84,7 +83,7 @@ function fetchEBirdData() {
 
                     let linkToEbird = `https://ebird.org/checklist/${bird.subId}`;
                     let customLink = `https://ebird.org/map/${bird.speciesCode}?neg=true&env.minX=${envminX}&env.minY=${envminY}&env.maxX=${envmaxX}&env.maxY=${envmaxY}&zh=true&gp=true&ev=Z&excludeExX=false&excludeExAll=false&mr=1-12&bmo=1&emo=12&yr=cur&byr=2023&eyr=2023#more-map-options`;
-                    color = determineColor(bird.obsDt);
+
                     // Populate the div with the bird data
                     birdDiv.innerHTML = `
                         <div style="flex: 1; display: flex; align-items: center;">
@@ -103,7 +102,7 @@ function fetchEBirdData() {
                     `;
 
 
-
+                    let color = determineColor(bird.obsDt);
                     let markerUrl = 'http://maps.google.com/mapfiles/ms/icons/' + color + '-dot.png';
 
                     // Append the bird div to the dataDisplay element
