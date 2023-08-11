@@ -138,8 +138,9 @@ function fetchEBirdData() {
 function initMap() {
     var location = { lat: lat, lng: lng }; // Replace with your coordinates
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 9,
-        center: location
+        zoom: 8,
+        center: location,
+        gestureHandling: 'greedy'
     });
 
     infoWindow = new google.maps.InfoWindow();
