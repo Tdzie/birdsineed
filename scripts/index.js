@@ -178,7 +178,7 @@ function getTimeAgo(observationDate) {
 }
 
 
-window.initMap = function() {
+window.initMap = async function() {
     var location = { lat: lat, lng: lng };
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 8,
