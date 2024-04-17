@@ -7,6 +7,7 @@ let centerMarker;
 const eBirdApiToken = '377m29pfd648';
 var lat = 42.0501;
 var lng = -78.8801;
+var distanceFromCenter = 50;
 var latForApi = parseFloat(lat.toFixed(2));
 var lngForApi = parseFloat(lng.toFixed(2));
 var activeUser = 'Cappa';
@@ -45,7 +46,7 @@ function fetchEBirdData() {
     };
 
 
-    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=7&dist=50&includeProvisional=true&sort=species`, requestOptions)
+    fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${latForApi}&lng=${lngForApi}&back=7&dist=${distanceFromCenter}&includeProvisional=true&sort=species`, requestOptions)
 .then(response => response.json())
 .then(eBirdData => {
     let birdGroups = {};
@@ -178,9 +179,12 @@ function getTimeAgo(observationDate) {
 }
 
 
-window.initMap = async function() {
+async function initMap() {
     var location = { lat: lat, lng: lng };
-    map = new google.maps.Map(document.getElementById('map'), {
+
+    const { Map} = await google.maps.importLibrary("maps");
+
+    map = new Map(document.getElementById('map'), {
         zoom: 8,
         center: location,
         gestureHandling: 'greedy'
@@ -188,17 +192,6 @@ window.initMap = async function() {
 
     infoWindow = new google.maps.InfoWindow();
 
-    // Initialize the central marker
-    centerMarker = new google.maps.Marker({
-        position: location,
-        map: map,
-        // Use a built-in red icon or a custom one
-        icon: {
-            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', // URL to the standard red icon
-            // Scale the icon to be larger than the default size
-            scaledSize: new google.maps.Size(40, 40) // Adjust the size as needed
-        }
-    });
 
     google.maps.event.addListener(map, 'idle', function () {
         // Throttle updates by using a timeout
@@ -214,8 +207,7 @@ window.initMap = async function() {
             removeAllMarkers(); 
             fetchEBirdData();
 
-            // Update the position of the central marker to the new center of the map
-            centerMarker.setPosition(newCenter);
+
         }, 500);
     });
 }
@@ -287,3 +279,8 @@ function removeAllMarkers() {
     }
     markers = []; // Reset the array
 }
+document.getElementById('distanceSlider').addEventListener('input', function() {
+    distanceFromCenter = this.value;
+
+});
+initMap();
